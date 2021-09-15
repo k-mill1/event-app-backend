@@ -63,6 +63,11 @@ app.get('/:location', async (req, res) => {
   res.send(await Event.find({location: req.params.location}));
 });
 
+// get event by name
+app.get('/name/:name', async (req, res) => {
+  res.send(await Event.find({name: req.params.name}));
+});
+
 // post an event
 app.post('/', async (req, res) => {
   const newEvent = req.body;
