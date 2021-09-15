@@ -4,8 +4,7 @@ const eventSchema = mongoose.Schema({
   name: String,
   location: String,
   information: String,
-  date: String,
-  time: String
+  date: String
 })
 
 module.exports.Event = mongoose.model('Event', eventSchema)

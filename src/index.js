@@ -7,11 +7,11 @@ const morgan = require('morgan');
 const { ObjectId } = require('mongodb');
 const mongoose = require('mongoose');
 
-const { Event } = require('../models/event');
-const { User } = require('../models/user');
+const { Event } = require('./models/event');
+const { User } = require('./models/user');
 const { v4: uuidv4 } = require('uuid');
 
-mongoose.connect('mongodb+srv://user:kaisa@cluster0.8rpec.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', 
+mongoose.connect('mongodb+srv://user:kaisa@cluster0.p2xu7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', 
 { useNewUrlParser: true, useUnifiedTopology: true });
 
 // defining the Express app
@@ -28,15 +28,6 @@ app.use(cors());
 
 // adding morgan to log HTTP requests
 app.use(morgan('combined'));
-
-// app.post('/user', async (req, res) => {
-//   const user = new User({
-//     userName: 'bob',
-//     password: 'bob'
-//   })
-//   user.save()
-//   res.send({result:true})
-// })
 
 app.post('/auth', async (req, res) => {
   const user = await User.findOne({userName: req.body.username})
@@ -62,12 +53,17 @@ app.use(async (req, res, next) => {
 })
 
 // defining CRUD operations
+// get all events
 app.get('/', async (req, res) => {
   res.send(await Event.find());
 });
 
+// get event by location
+app.get('/:location', async (req, res) => {
+  res.send(await Event.find({location: req.params.location}));
+});
 
-
+// post an event
 app.post('/', async (req, res) => {
   const newEvent = req.body;
   const event = new Event(newEvent);
@@ -75,19 +71,21 @@ app.post('/', async (req, res) => {
   res.send({ message: 'New event inserted.' });
 });
 
+// delete an event
 app.delete('/:id', async (req, res) => {
   await Event.deleteOne({ _id: ObjectId(req.params.id) })
   res.send({ message: 'Event removed.' });
 });
 
+// update event
 app.put('/:id', async (req, res) => {
   await Event.findOneAndUpdate({ _id: ObjectId(req.params.id)}, req.body )
   res.send({ message: 'Event updated.' });
 });
 
 // starting the server
-app.listen(3001, () => {
-  console.log('listening on port 3001');
+app.listen(3002, () => {
+  console.log('listening on port 3002');
 });
 
 var db = mongoose.connection;
