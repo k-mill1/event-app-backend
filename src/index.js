@@ -1,34 +1,45 @@
-/// importing the dependencies
+/// imports the dependencies
 const express = require('express');
+const app = express()
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const { ObjectId } = require('mongodb');
 const mongoose = require('mongoose');
+const path = require("path");
+const { v4: uuidv4 } = require('uuid');
+require("dotenv").config()
 
+// imports the models
 const { Event } = require('./models/event');
 const { User } = require('./models/user');
-const { v4: uuidv4 } = require('uuid');
 
-mongoose.connect('mongodb+srv://user:kaisa@cluster0.p2xu7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', 
+// connects frontend to the server
+app.use(express.static(path.resolve(__dirname, "./event-app-frontend/build")));
+app.get("*", function (request, response) {
+  response.sendFile(path.resolve(__dirname, "./event-app-frontend/build", "index.html"));
+});
+
+
+// connects to database
+mongoose.connect(process.env.MONGODB_CONNECTION_STRING, 
 { useNewUrlParser: true, useUnifiedTopology: true });
 
-// defining the Express app
-const app = express();
-
-// adding Helmet to enhance your API's security
+// adds Helmet to enhance  API's security
 app.use(helmet());
 
-// using bodyParser to parse JSON bodies into JS objects
+// uses bodyParser to parse JSON bodies into JS objects
 app.use(bodyParser.json());
 
-// enabling CORS for all requests
+// enables CORS for all requests
 app.use(cors());
 
-// adding morgan to log HTTP requests
+// adds morgan to log HTTP requests
 app.use(morgan('combined'));
 
+
+// authorisation
 app.post('/auth', async (req, res) => {
   const user = await User.findOne({userName: req.body.username})
   if (!user) {
@@ -88,9 +99,11 @@ app.put('/:id', async (req, res) => {
   res.send({ message: 'Event updated.' });
 });
 
-// starting the server
-app.listen(3002, () => {
-  console.log('listening on port 3002');
+// starts the server
+const PORT = process.env.PORT || 3002;
+
+app.listen(PORT, () => {
+  console.log(`listening on port ${PORT}`);
 });
 
 var db = mongoose.connection;
