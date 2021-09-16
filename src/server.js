@@ -16,9 +16,9 @@ const { Event } = require('./models/event');
 const { User } = require('./models/user');
 
 // connects frontend to the server
-app.use(express.static(path.resolve(__dirname, "./event-app-frontend/build")));
+app.use(express.static(path.resolve(__dirname, "./client/build")));
 app.get("*", function (request, response) {
-  response.sendFile(path.resolve(__dirname, "./event-app-frontend/build", "index.html"));
+  response.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
 });
 
 
