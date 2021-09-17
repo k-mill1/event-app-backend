@@ -23,12 +23,12 @@
   "scripts": {
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build": "cd client && npm run build",
-    "install-client": "cd client && npm install",
+    "build": "cd event-app-frontend && npm run build",
+    "install-client": "cd event-app-frontend && npm install",
     "heroku-postbuild": "npm run install-client && npm run build",
-    "server": "nodemon src/server.js",
-    "develop": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix client\"",
-    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix client\""
+    "server": "nodemon src/index.js",
+    "develop": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix event-app-frontend\"",
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix event-app-frontend\""
   },
   "eslintConfig": {
     "extends": [
